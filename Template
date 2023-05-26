@@ -5,7 +5,7 @@ serial_numbers=("serial1" "serial2" "serial3" "serial4" "serial5" "serial6" "ser
 numbers=("1" "2" "3" "4" "5" "6" "7" "8" "9" "10")
 
 # Get the current logged-in user's name
-current_user=$(ls -l /dev/console | awk '{print $3}')
+current_user=$"%FullName%"
 
 # Loop through each serial number
 for ((i=0; i<${#serial_numbers[@]}; i++)); do
