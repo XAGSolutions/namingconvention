@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Array of serial numbers and corresponding numbers
+serial_numbers=("serial1" "serial2" "serial3" "serial4" "serial5" "serial6" "serial7" "serial8" "serial9" "serial10")
+numbers=("1" "2" "3" "4" "5" "6" "7" "8" "9" "10")
+
+# Get the current logged-in user's name
+current_user=$(ls -l /dev/console | awk '{print $3}')
+
+# Loop through each serial number
+for ((i=0; i<${#serial_numbers[@]}; i++)); do
+    # Get the serial number of the machine
+    serial=$(system_profiler SPHardwareDataType | awk '/Serial Number/{print $4}')
+    
+    # Check if the serial number matches
+    if [[ $serial == ${serial_numbers[$i]} ]]; then
+        # Generate the new name for the machine
+        new_name="PDX-TPS-${numbers[$i]}-$current_user"
+        
+        # Set the new name
+        scutil --set ComputerName "$new_name"
+        scutil --set HostName "$new_name"
+        scutil --set LocalHostName "$new_name"
+        dscacheutil -flushcache
+        
+        echo "Renamed machine $serial to $new_name"
+        exit 0
+    fi
+done
+
+echo "No matching serial number found."
+exit 1
